@@ -8,9 +8,22 @@ A transaction dataset can look straightforward, but not every row is a sale. Thi
 
 [UCI Online Retail dataset](https://archive.ics.uci.edu/dataset/352/online-retail) (CC BY 4.0): 541,909 transaction lines from a UK-based online retailer, 1 Dec 2010 – 9 Dec 2011. The raw data file is not included in this repository; the Power BI file embeds a copy (see Dashboard).
 
-## Key findings
+## Dashboard
 
-![Power BI dashboard](dashboard.png)
+![Power BI dashboard: overview](dashboard.png)
+
+![Power BI dashboard: products](dashboard-products.png)
+
+The Power BI report has two pages:
+
+- **Overview:** gross, cancelled and net sales, cancellation rate, monthly trends, top products and countries.
+- **Products:** click a bar in the Top 10 chart, or use the Description slicer to look up any product; the monthly trend and cards update.
+
+It applies the same cleaning steps as the notebook (de-duplication, UnitPrice > 0), and its totals reconcile with the notebook: gross £10.64M, cancellations -£893.98K, net £9.75M, cancellation rate excluding the 10 largest cancelled lines 4.76%. Monthly charts exclude December 2011 because the data ends on 9 December.
+
+The Power BI file (`online-retail-dashboard.pbix`) is included in this repository. It embeds the UCI dataset (CC BY 4.0), so the DAX measures and Power Query cleaning steps can be inspected directly.
+
+## Key findings
 
 **1. Many rows are not sales.** Cancellations, likely stock write-offs (price 0, no customer ID, descriptions such as "damaged"), two bad-debt accounting entries and zero-price lines were identified and kept out of sales. Row counts reconcile at every step (536,641 → 534,129 → 524,878). The reasons behind each group are assumptions, since the data does not state them.
 
@@ -24,12 +37,8 @@ A transaction dataset can look straightforward, but not every row is a sale. Thi
 
 - **Gross sales:** quantity > 0 and price > 0 (524,878 rows). How much was sold.
 - **Net sales:** price > 0, cancellations kept (534,129 rows). Revenue left after cancellations.
-
-## Dashboard
-
-The Power BI dashboard (screenshot above) shows gross, cancelled and net sales by month, product and country. It applies the same cleaning steps as the notebook (de-duplication, UnitPrice > 0), and its totals reconcile with the notebook: gross £10.64M, cancellations -£893.98K, net £9.75M, cancellation rate excluding the 10 largest cancelled lines 4.76%.
-
-The Power BI file (`online-retail-dashboard.pbix`) is included in this repository. It embeds the UCI dataset (CC BY 4.0), so the DAX measures and Power Query cleaning steps can be inspected directly.
+- **Net units:** units sold minus units cancelled.
+- **Cancel rate (excl. top 10):** the 10 largest cancelled lines are removed from the cancelled amount; their original sales remain in gross sales, so the rate is approximate.
 
 ## Limitations
 
@@ -41,6 +50,8 @@ The Power BI file (`online-retail-dashboard.pbix`) is included in this repositor
 
 ## How to run
 
+**Notebook**
+
 1. Download `Online Retail.xlsx` from the link above.
 2. Convert it once to CSV (this loads much faster than Excel):
    ```python
@@ -50,8 +61,10 @@ The Power BI file (`online-retail-dashboard.pbix`) is included in this repositor
 3. Install the requirements: `pip install pandas openpyxl`
 4. Open `online-retail.ipynb` and run all cells.
 
-To explore the dashboard, open `online-retail-dashboard.pbix` in Power BI Desktop (Windows).
+**Dashboard**
+
+Open `online-retail-dashboard.pbix` in Power BI Desktop (Windows).
 
 ## Tools
 
-Python, pandas, Jupyter, Power BI
+Python, pandas, Jupyter, Power BI (Power Query, DAX)
