@@ -6,9 +6,11 @@ A transaction dataset can look straightforward, but not every row is a sale. Thi
 
 ## Data
 
-[UCI Online Retail dataset](https://archive.ics.uci.edu/dataset/352/online-retail): 541,909 transaction lines from a UK-based online retailer, 1 Dec 2010 – 9 Dec 2011. The data file is not included in this repository.
+[UCI Online Retail dataset](https://archive.ics.uci.edu/dataset/352/online-retail) (CC BY 4.0): 541,909 transaction lines from a UK-based online retailer, 1 Dec 2010 – 9 Dec 2011. The raw data file is not included in this repository; the Power BI file embeds a copy (see Dashboard).
 
 ## Key findings
+
+![Power BI dashboard](dashboard.png)
 
 **1. Many rows are not sales.** Cancellations, likely stock write-offs (price 0, no customer ID, descriptions such as "damaged"), two bad-debt accounting entries and zero-price lines were identified and kept out of sales. Row counts reconcile at every step (536,641 → 534,129 → 524,878). The reasons behind each group are assumptions, since the data does not state them.
 
@@ -22,6 +24,12 @@ A transaction dataset can look straightforward, but not every row is a sale. Thi
 
 - **Gross sales:** quantity > 0 and price > 0 (524,878 rows). How much was sold.
 - **Net sales:** price > 0, cancellations kept (534,129 rows). Revenue left after cancellations.
+
+## Dashboard
+
+The Power BI dashboard (screenshot above) shows gross, cancelled and net sales by month, product and country. It applies the same cleaning steps as the notebook (de-duplication, UnitPrice > 0), and its totals reconcile with the notebook: gross £10.64M, cancellations -£893.98K, net £9.75M, cancellation rate excluding the 10 largest cancelled lines 4.76%.
+
+The Power BI file (`online-retail-dashboard.pbix`) is included in this repository. It embeds the UCI dataset (CC BY 4.0), so the DAX measures and Power Query cleaning steps can be inspected directly.
 
 ## Limitations
 
@@ -42,10 +50,8 @@ A transaction dataset can look straightforward, but not every row is a sale. Thi
 3. Install the requirements: `pip install pandas openpyxl`
 4. Open `online-retail.ipynb` and run all cells.
 
+To explore the dashboard, open `online-retail-dashboard.pbix` in Power BI Desktop (Windows).
+
 ## Tools
 
-Python, pandas, Jupyter
-
-## Possible next steps
-
-Monthly trend of gross vs net sales, charts, and a dashboard version of the main findings.
+Python, pandas, Jupyter, Power BI
